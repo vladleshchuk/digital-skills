@@ -1,0 +1,164 @@
+<div class="container-fluid" style="min-height: 50vh; padding-top: 20px;">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h1 class="text-primary">Доступні Курси</h1>
+        </div>
+    </div>
+    
+    <div class="row my-4">
+        
+        <!-- ===================== ЛІВА ПАНЕЛЬ: ФІЛЬТРИ ===================== -->
+        <div class="col-md-3">
+            <h4 class="text-secondary mb-3">Фільтри</h4>
+            <form action="/courses" method="POST">  <!-- Надсилає POST-запит на /courses -->
+                
+                <!-- ФІЛЬТР 1: DIMENSIONS -->
+                <h6 class="text-info mt-4">Виміри Digital Skills:</h6>
+                {{#each dimensions}}
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="filter_dim" value="{{this.id_dimensions}}" id="dim-{{this.id_dimensions}}"
+                        {{#if selectedDimensions}}
+                            {{#if (contains selectedDimensions this.id_dimensions)}}checked{{/if}}
+                        {{/if}}
+                    >
+                    <label class="form-check-label" for="dim-{{this.id_dimensions}}">
+                        {{this.dimensions_name}}
+                    </label>
+                </div>
+                {{/each}}
+                
+                <hr class="my-3">
+
+                <!-- ФІЛЬТР 2: СКЛАДНІСТЬ КУРСУ (У ДВОХ СТОВПЦЯХ) -->
+                <h6 class="text-info mt-4">Складність курсу (1-8):</h6>
+                <div class="row">
+                    <div class="col-6">
+                        <!-- ПЕРШИЙ СТОВПЕЦЬ: Рівні 1-4 -->
+                        {{#each difficultyLevels}}
+                            <!-- lt: less than. Показуємо елементи, менші за 5 (1, 2, 3, 4) -->
+                            {{#lt this 5}} 
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="filter_difficulty" value="{{this}}" id="diff-{{this}}"
+                                    {{#if selectedDifficulties}}
+                                        {{#if (contains selectedDifficulties this)}}checked{{/if}}
+                                    {{/if}}
+                                >
+                                <label class="form-check-label" for="diff-{{this}}">
+                                    Рівень {{this}}
+                                </label>
+                            </div>
+                            {{/lt}}
+                        {{/each}}
+                    </div>
+                    <div class="col-6">
+                        <!-- ДРУГИЙ СТОВПЕЦЬ: Рівні 5-8 -->
+                         {{#each difficultyLevels}}
+                            <!-- gte: greater than or equal. Показуємо елементи, більші або рівні 5 (5, 6, 7, 8) -->
+                            {{#gte this 5}} 
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="filter_difficulty" value="{{this}}" id="diff-{{this}}"
+                                    {{#if selectedDifficulties}}
+                                        {{#if (contains selectedDifficulties this)}}checked{{/if}}
+                                    {{/if}}
+                                >
+                                <label class="form-check-label" for="diff-{{this}}">
+                                    Рівень {{this}}
+                                </label>
+                            </div>
+                            {{/gte}}
+                        {{/each}}
+                    </div>
+                </div>
+
+                <hr class="my-3">
+                
+                <!-- ✅ ФІЛЬТР 3: ТРИВАЛІСТЬ КУРСУ (НОВИЙ БЛОК) -->
+                <h6 class="text-info mt-4">Тривалість курсу:</h6>
+                {{#each durationRanges}}
+                <div class="form-check">
+                    <!-- name="filter_duration" є групою радіокнопок -->
+                    <input class="form-check-input" type="radio" name="filter_duration" value="{{this.value}}" id="dur-{{this.value}}"
+                        {{#if (eq ../selectedDuration this.value)}}checked{{/if}}
+                    >
+                    <label class="form-check-label" for="dur-{{this.value}}">
+                        {{this.label}}
+                    </label>
+                </div>
+                {{/each}}
+                <!-- Додамо опцію "Всі" для скидання радіокнопки (за замовчуванням) -->
+                 <div class="form-check">
+                    <input class="form-check-input" type="radio" name="filter_duration" value="all" id="dur-all"
+                        {{#unless selectedDuration}}checked{{/unless}}
+                        {{#if (eq selectedDuration 'all')}}checked{{/if}}
+                    >
+                    <label class="form-check-label" for="dur-all">
+                        Всі
+                    </label>
+                </div>
+                
+                <hr class="my-4">
+                
+                <button type="submit" class="btn btn-sm btn-success mt-4">Застосувати фільтр</button>
+                <a href="/courses" class="btn btn-sm btn-outline-secondary mt-4">Скинути</a>
+            </form>
+            
+            <hr class="my-4">
+            <a href="/courses/create" class="btn btn-sm btn-primary w-100">Додати курс</a>
+        </div>
+        <!-- =================== КІНЕЦЬ ЛІВОЇ ПАНЕЛІ ===================== -->
+
+
+        <!-- ====================== ПРАВА ПАНЕЛЬ: КУРСИ (Не змінювався) ====================== -->
+        <div class="col-md-9">
+            <div class="row">
+                {{#each courses}}
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+
+                        <div class="card-header bg-primary text-white">
+                            {{this.dimension_name}}
+                        </div>
+
+                        <!-- Тіло картки: Інформація про курс -->
+                        <div class="card-body">
+                            
+                            <!-- БЛОК ДЛЯ ЗОБРАЖЕННЯ КУРСУ (ДОДАНО) -->
+                            {{#if this.courses_img}}
+                            <div class="text-center mb-3">
+                                <img src="/{{this.courses_img}}" 
+                                     class="card-img-top" 
+                                     alt="Зображення курсу"
+                                     style="max-height: 120px; width: auto; object-fit: contain;">
+                            </div>
+                            {{/if}}
+                            <!-- КІНЕЦЬ БЛОКУ ЗОБРАЖЕННЯ -->
+                            
+                            <h5 class="card-title text-success">{{this.courses_title}}</h5>
+                            <p class="card-text text-muted small">
+                                Складність курсу: {{this.courses_difficulty}} | Тривалість: {{this.courses_duration}} днів
+                            </p>
+                            <p class="card-text">
+                                {{this.courses_description}}
+                            </p>
+                        </div>
+                        
+                        <div class="card-footer d-flex justify-content-between align-items-center">
+                            <a href="/courses/edit/{{this.id_courses}}" class="btn btn-sm btn-outline-success">Редагувати</a>
+                            <form action="/courses/delete/{{this.id_courses}}" method="POST" style="display:inline;">
+                                <input type="submit" value="Видалити" class="btn btn-sm btn-outline-danger">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                
+                {{#unless courses}}
+                <div class="col-12 text-center mt-5">
+                    <p class="lead">На жаль, курси поки що не додано.</p>
+                </div>
+                {{/unless}}
+            </div>
+        </div>
+        <!-- =================== КІНЕЦЬ ПРАВОЇ ПАНЕЛІ ===================== -->
+    </div>
+</div>

@@ -1,0 +1,27 @@
+{
+  "name": "digital-skills",
+  "version": "1.0.0",
+  "description": "Digital Skills Masters Degree",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "dev": "nodemon index"
+},
+  "keywords": [
+    "DigitalSkills"
+  ],
+  "author": "Vladyslav Leshchuk",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.3",
+    "fs": "^0.0.1-security",
+    "hbs": "^4.1.2",
+    "http": "^0.0.1-security",
+    "mysql2": "^3.15.3",
+    "nodemon": "^3.1.10",
+    "path": "^0.12.7"
+  }
+}
