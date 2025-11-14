@@ -1,4 +1,4 @@
-# Master's Thesis Project: "Digital S-kills"
+# Master's Thesis Project: "Digital Skills"
 
 **A web platform for managing and taking educational courses on digital skills, developed as part of a master's thesis.**
 
